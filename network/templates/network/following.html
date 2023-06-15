@@ -1,0 +1,44 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<br>
+
+  <div class="container-lg">
+    {%for posts in page_obj%}
+        <div class="post_li card">
+            <div class="card-body">
+                <div class="card-title"><h5 style="float:right;"><small>{{posts.timestamp}}</small></h5><h5 class="card-content">
+                    <p>{{posts.user}}</a> Says:</p>
+                </div>
+                    <h6 class="card-text">{{posts.body}}</h6>
+                    <button class="btn btn-outline-primary" onclick="post_like(this.value)" value="{{posts.id}}">Like</button>
+                    <h6 style="float:right;">{{posts.user_likes.count}} Likes</h6>
+            </div>
+        </div>
+  {%endfor%}
+  <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+  </div>
+  
+
+{%endblock%}
+
+

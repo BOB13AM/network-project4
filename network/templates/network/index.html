@@ -1,0 +1,84 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    
+{%if request.user.is_authenticated%}
+<br>
+<div class="container">
+    <div style="align-items: center; align-self: center; align-content: center;">
+       
+            <div class="input-group mb-3 marg_btm">
+                <input required autofocus class="form-control input_text" type="text" id="form_body">
+                <input class="btn btn-outline-secondary" type="submit" onclick="add_post()" id="button-addon1" value="Post">
+            </div>
+  
+</div>
+</div>
+<hr>
+<div class="container-lg">
+    <ul id="post_content" style="width: 90%;">
+        {%for posts in page_obj%}
+          <li class="post_li card" style="width:100%;">
+                <div class="card-body">
+                <div class="card-title"><h5 style="float:right;"><small>{{posts.timestamp}}</small></h5><h5 class="card-content">
+                    <a href="{% url 'user_page' posts.user.id %}">{{posts.user}}</a> Says:</h5>
+                    <h5  class="card-content" style="float:right;"><small><span class="like_c">{{posts.user_likes.count}}</span> Likes</small></h5>
+                    <p></p>
+                </div>
+                
+                <h6 class="card-text post_body" style="display: flex;" data-body="{{posts.body}}">{{posts.body}}</h6>
+                
+                {%if request.user == posts.user%}
+                <button class="edit_btn btn btn-outline-primary" value="{{posts.id}}">edit</button>   
+                {%endif%}
+                <div style="float:right;">
+                     
+                    {%if request.user in posts.user_likes.all%}
+                        <div class="heart-btn">
+                            <input class="check-input" onclick="unlike(this)" data-id="{{posts.id}}"  type="checkbox" checked/>
+                            <button class="like-btn"><span>Like</span></button>
+                        </div>
+                      
+                        {%else%}
+                        <div class="heart-btn">
+                            <input class="check-input" onclick="like(this)" data-id="{{posts.id}}" type="checkbox"/>
+                            <button class="like-btn"><span>Like</span></button>
+                        </div>
+                        
+                    {%endif%}
+                  </div>    
+                    
+                </div>
+            </li>
+        {%endfor%}
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+        
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+        
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </ul>
+   
+</div>
+{%else%}
+<div class="d-flex justify-content-center row" style="margin: 2%;"><h6 style="color: navy;">Share Your Own Post, <a href="{% url 'login' %}">Log In here.</a></h6></div>
+<hr>
+{%endif%}
+
+
+
+{% endblock %}
+
+
